@@ -11,6 +11,8 @@ services:
             - 8001:80
         networks:
             - symfony
+        depends_on:
+            - php
     php:
         build:
             context: .

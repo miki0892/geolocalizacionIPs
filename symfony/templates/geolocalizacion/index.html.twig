@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Geolocalizaci&oacute;n{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="example-wrapper">
+        <h3>Geolocalizaci&oacute;n IPs</h3>
+        {{ form_start(form) }}
+            {{ form_errors(form.ultimaIpConsultada) }}<br>
+            {{ form_label(form.ultimaIpConsultada) }}
+            {{ form_widget(form.ultimaIpConsultada) }}
+            <input type="submit" value="Consultar geolocalizaci&oacute;n">
+        {{ form_end(form) }}
+    </div>
+    {% if resultados is not null %}
+        <div class="example-wrapper">
+            <label for="fip">IP:</label><br>
+            <label for="fip">Fecha actual:</label><br>
+            <label for="fip">Pa&iacute;s:</label><br>
+            <label for="fip">ISO Code:</label><br>
+            <label for="fip">Idiomas:</label><br>
+            <label for="fip">Moneda:</label><br>
+            <label for="fip">Hora:</label><br>
+            <label for="fip">Direcci&oacute;n estimada:</label>
+        </div>
+    {% endif %}
+{% endblock %}

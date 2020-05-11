@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ConsultaGeolocalizacionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ConsultaGeolocalizacionRepository::class)
@@ -18,9 +19,16 @@ class ConsultaGeolocalizacion
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Ip(message = "La dirección IP ingresada no es válida", version="all")
+     */
+    private $ultimaIpConsultada;
+
+    /**
      * @ORM\Column(type="array")
      */
-    private $ips = [];
+    private $ipsConsultadasPorPais = [];
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -48,14 +56,27 @@ class ConsultaGeolocalizacion
         return $this->id;
     }
 
-    public function getIps(): ?array
+    public function getUltimaIpConsultada(): ?string
     {
-        return $this->ips;
+        return $this->ultimaIpConsultada;
     }
 
-    public function setIps(array $ips): self
+    public function setUltimaIpConsultada(string $ip): self
     {
-        $this->ips = $ips;
+        $this->ultimaIpConsultada = $ip;
+
+        return $this;
+    }
+
+
+    public function getIpsConsultadasPorPais(): ?array
+    {
+        return $this->ipsConsultadasPorPais;
+    }
+
+    public function setIpsConsultadasPorPais(array $ips): self
+    {
+        $this->ipsConsultadasPorPais = $ips;
 
         return $this;
     }
