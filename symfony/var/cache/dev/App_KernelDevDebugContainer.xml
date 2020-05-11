@@ -159,6 +159,30 @@
     <service id="kernel" class="App\Kernel" public="true" synthetic="true">
       <tag name="routing.route_loader"/>
     </service>
+    <service id="App\Repository\ConsultaGeolocalizacionRepository" class="App\Repository\ConsultaGeolocalizacionRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\HorarioRepository" class="App\Repository\HorarioRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\IdiomaRepository" class="App\Repository\IdiomaRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\MonedaRepository" class="App\Repository\MonedaRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\PaisRepository" class="App\Repository\PaisRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\UbicacionRepository" class="App\Repository\UbicacionRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory" public="false"/>
     <service id="response_listener" class="Symfony\Component\HttpKernel\EventListener\ResponseListener" public="false">
       <tag name="kernel.event_subscriber"/>
@@ -1290,7 +1314,7 @@
       <factory class="Doctrine\ORM\EntityManager" method="create"/>
     </service>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory" public="false">
-      <argument type="service" id=".service_locator.I3K77mT"/>
+      <argument type="service" id=".service_locator.7mpqd9."/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -1897,6 +1921,18 @@
       </call>
     </service>
     <service id="twig.missing_extension_suggestor" class="Twig\Extra\TwigExtraBundle\MissingExtensionSuggestor" public="false"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ConsultaGeolocalizacionRepository" class="App\Repository\ConsultaGeolocalizacionRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\ConsultaGeolocalizacionRepository" class="App\Repository\ConsultaGeolocalizacionRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\HorarioRepository" class="App\Repository\HorarioRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\HorarioRepository" class="App\Repository\HorarioRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\IdiomaRepository" class="App\Repository\IdiomaRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\IdiomaRepository" class="App\Repository\IdiomaRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\MonedaRepository" class="App\Repository\MonedaRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\MonedaRepository" class="App\Repository\MonedaRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PaisRepository" class="App\Repository\PaisRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\PaisRepository" class="App\Repository\PaisRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UbicacionRepository" class="App\Repository\UbicacionRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\UbicacionRepository" class="App\Repository\UbicacionRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".service_locator.CmORmuK" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -2156,6 +2192,17 @@
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
+      </argument>
+    </service>
+    <service id=".service_locator.7mpqd9." class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="App\Repository\ConsultaGeolocalizacionRepository" type="service" id="App\Repository\ConsultaGeolocalizacionRepository"/>
+        <argument key="App\Repository\HorarioRepository" type="service" id="App\Repository\HorarioRepository"/>
+        <argument key="App\Repository\IdiomaRepository" type="service" id="App\Repository\IdiomaRepository"/>
+        <argument key="App\Repository\MonedaRepository" type="service" id="App\Repository\MonedaRepository"/>
+        <argument key="App\Repository\PaisRepository" type="service" id="App\Repository\PaisRepository"/>
+        <argument key="App\Repository\UbicacionRepository" type="service" id="App\Repository\UbicacionRepository"/>
       </argument>
     </service>
     <service id="logger" class="Symfony\Component\HttpKernel\Log\Logger" public="false"/>
