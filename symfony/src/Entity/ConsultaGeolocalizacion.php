@@ -51,6 +51,12 @@ class ConsultaGeolocalizacion
      */
     private $cantidadInvocaciones;
 
+    public function cargarInformacionPais($infoPais){
+        $this->codigoISOPais = $infoPais["alpha2Code"];
+        $this->pais = new Pais();
+        $this->pais->cargarInformacionPais($infoPais);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

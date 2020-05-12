@@ -17,9 +17,9 @@
             <input type="submit" value="Consultar geolocalizaci&oacute;n">
         {{ form_end(form) }}
     </div>
-    {% if resultados is not null %}
+    {% if geolocalizacion is not null %}
         <div class="example-wrapper">
-            <label for="fip">IP:</label><br>
+            <label for="fip">IP:</label>{{ geolocalizacion.codigoISOPais }}<br>
             <label for="fip">Fecha actual:</label><br>
             <label for="fip">Pa&iacute;s:</label><br>
             <label for="fip">ISO Code:</label><br>

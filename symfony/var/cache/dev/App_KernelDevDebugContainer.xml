@@ -44,6 +44,9 @@
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
     <parameter key="container.dumper.inline_class_loader">true</parameter>
     <parameter key="container.dumper.inline_factories">true</parameter>
+    <parameter key="endpoint_geolocalizacion_ips">https://api.ip2country.info/ip?</parameter>
+    <parameter key="endpoint_info_pais_por_codigo_iso">https://restcountries.eu/rest/v2/alpha/</parameter>
+    <parameter key="url_monedas">http://fixer.io/</parameter>
     <parameter key="fragment.renderer.hinclude.global_template"></parameter>
     <parameter key="fragment.path">/_fragment</parameter>
     <parameter key="kernel.secret">%env(APP_SECRET)%</parameter>
@@ -167,17 +170,13 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
-        <argument type="service" id=".service_locator.pNNo5z3.App\Controller\GeolocalizacionController"/>
+        <argument type="service" id=".service_locator.Itk2j2N.App\Controller\GeolocalizacionController"/>
       </call>
     </service>
     <service id="App\Form\ConsultaGeolocalizacionType" class="App\Form\ConsultaGeolocalizacionType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
     <service id="App\Repository\ConsultaGeolocalizacionRepository" class="App\Repository\ConsultaGeolocalizacionRepository" autowire="true" autoconfigure="true">
-      <tag name="doctrine.repository_service"/>
-      <argument type="service" id="doctrine"/>
-    </service>
-    <service id="App\Repository\HorarioRepository" class="App\Repository\HorarioRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -197,6 +196,7 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Service\Geolocalizador" class="App\Service\Geolocalizador" autowire="true" autoconfigure="true"/>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory" public="false"/>
     <service id="response_listener" class="Symfony\Component\HttpKernel\EventListener\ResponseListener" public="false">
       <tag name="kernel.event_subscriber"/>
@@ -1515,7 +1515,7 @@
       <factory class="Doctrine\ORM\EntityManager" method="create"/>
     </service>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory" public="false">
-      <argument type="service" id=".service_locator.7mpqd9."/>
+      <argument type="service" id=".service_locator.XAR.AUc"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -2154,8 +2154,6 @@
     <service id=".abstract.instanceof.App\Form\ConsultaGeolocalizacionType" class="App\Form\ConsultaGeolocalizacionType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ConsultaGeolocalizacionRepository" class="App\Repository\ConsultaGeolocalizacionRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\ConsultaGeolocalizacionRepository" class="App\Repository\ConsultaGeolocalizacionRepository" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\HorarioRepository" class="App\Repository\HorarioRepository" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Repository\HorarioRepository" class="App\Repository\HorarioRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\IdiomaRepository" class="App\Repository\IdiomaRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\IdiomaRepository" class="App\Repository\IdiomaRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\MonedaRepository" class="App\Repository\MonedaRepository" autowire="true" abstract="true"/>
@@ -2374,9 +2372,18 @@
         <argument>make:migration</argument>
       </call>
     </service>
-    <service id=".service_locator.I3K77mT" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.1YisBOq" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
-      <argument type="collection"/>
+      <argument type="collection">
+        <argument key="geolocalizador" type="service" id="App\Service\Geolocalizador"/>
+      </argument>
+    </service>
+    <service id=".service_locator.t2HGjID" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="App\Controller\GeolocalizacionController::index" type="service" id=".service_locator.1YisBOq"/>
+        <argument key="App\Controller\GeolocalizacionController:index" type="service" id=".service_locator.1YisBOq"/>
+      </argument>
     </service>
     <service id=".service_locator._tpP3ur" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
@@ -2446,11 +2453,10 @@
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
       </argument>
     </service>
-    <service id=".service_locator.7mpqd9." class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.XAR.AUc" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\ConsultaGeolocalizacionRepository" type="service" id="App\Repository\ConsultaGeolocalizacionRepository"/>
-        <argument key="App\Repository\HorarioRepository" type="service" id="App\Repository\HorarioRepository"/>
         <argument key="App\Repository\IdiomaRepository" type="service" id="App\Repository\IdiomaRepository"/>
         <argument key="App\Repository\MonedaRepository" type="service" id="App\Repository\MonedaRepository"/>
         <argument key="App\Repository\PaisRepository" type="service" id="App\Repository\PaisRepository"/>
@@ -2458,7 +2464,7 @@
       </argument>
     </service>
     <service id="logger" class="Symfony\Component\HttpKernel\Log\Logger" public="false"/>
-    <service id=".service_locator.pNNo5z3" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.Itk2j2N" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="doctrine" type="service" id="doctrine" on-invalid="ignore"/>
@@ -2471,11 +2477,11 @@
         <argument key="twig" type="service" id="twig" on-invalid="ignore"/>
       </argument>
     </service>
-    <service id=".service_locator.pNNo5z3.App\Controller\GeolocalizacionController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.Itk2j2N.App\Controller\GeolocalizacionController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator_context" id="App\Controller\GeolocalizacionController"/>
       <argument>App\Controller\GeolocalizacionController</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.pNNo5z3" method="withContext"/>
+      <factory service=".service_locator.Itk2j2N" method="withContext"/>
     </service>
     <service id=".service_locator.ld1.260" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
@@ -2555,12 +2561,12 @@
     <service id="debug.argument_resolver.request.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestValueResolver" public="false"/>
     <service id="debug.argument_resolver.session.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\SessionValueResolver" public="false"/>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.I3K77mT"/>
+      <argument type="service" id=".service_locator.t2HGjID"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver" public="false">
-      <argument type="service" id=".service_locator.I3K77mT"/>
+      <argument type="service" id=".service_locator.t2HGjID"/>
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <argument type="service" id=".service_locator.Kn2t2KQ"/>
@@ -2799,10 +2805,11 @@
     <service id="Twig\Environment" alias="twig" public="false"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.CmORmuK" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.I3K77mT"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.t2HGjID"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger" public="false"/>
     <service id=".service_locator.KMLuThm" alias=".service_locator._tpP3ur" public="false"/>
+    <service id=".service_locator.YT0FG7e" alias=".service_locator.Itk2j2N" public="false"/>
     <service id="event_dispatcher" alias="debug.event_dispatcher" public="true"/>
     <service id="controller_resolver" alias="debug.controller_resolver" public="false"/>
     <service id="argument_resolver" alias="debug.argument_resolver" public="false"/>

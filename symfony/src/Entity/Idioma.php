@@ -27,6 +27,12 @@ class Idioma
      */
     private $abreviacion;
 
+    public function __construct($nombre, $abreviacion)
+    {
+        $this->nombre = $nombre;
+        $this->abreviacion = $abreviacion;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

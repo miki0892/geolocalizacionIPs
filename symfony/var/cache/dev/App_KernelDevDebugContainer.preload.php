@@ -6,7 +6,7 @@
 use Symfony\Component\DependencyInjection\Dumper\Preloader;
 
 require dirname(__DIR__, 3).'/vendor/autoload.php';
-require __DIR__.'/ContainerNNMxrUy/App_KernelDevDebugContainer.php';
+require __DIR__.'/ContainerScgLxtI/App_KernelDevDebugContainer.php';
 
 $classes = [];
 $classes[] = 'Symfony\Bundle\FrameworkBundle\FrameworkBundle';
@@ -19,7 +19,6 @@ $classes[] = 'Symfony\Component\DependencyInjection\ServiceLocator';
 $classes[] = 'App\Controller\GeolocalizacionController';
 $classes[] = 'App\Form\ConsultaGeolocalizacionType';
 $classes[] = 'App\Repository\ConsultaGeolocalizacionRepository';
-$classes[] = 'App\Repository\HorarioRepository';
 $classes[] = 'App\Repository\IdiomaRepository';
 $classes[] = 'App\Repository\MonedaRepository';
 $classes[] = 'App\Repository\PaisRepository';

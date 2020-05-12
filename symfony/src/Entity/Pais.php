@@ -22,7 +22,7 @@ class Pais
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nombreEsnEspaniol;
+    private $nombreEnEspaniol;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -35,10 +35,9 @@ class Pais
     private $codigoISO;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Moneda::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity=Moneda::class)
      */
-    private $moneda;
+    private $monedas;
 
     /**
      * @ORM\ManyToMany(targetEntity=Idioma::class)
@@ -46,9 +45,9 @@ class Pais
     private $idiomas;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Horario::class)
+     * @ORM\Column(type="array")
      */
-    private $horarios;
+    private $zonasHorarias;
 
     /**
      * @ORM\OneToOne(targetEntity=Ubicacion::class, cascade={"persist", "remove"})
@@ -62,19 +61,31 @@ class Pais
         $this->horarios = new ArrayCollection();
     }
 
+    public function cargarInformacionPais($infoPais){
+        $this->nombreEnEspaniol = $infoPais["translations"]["es"];
+        $this->nombreEnIngles = $infoPais["name"];
+        $this->codigoISO = $infoPais["alpha2Code"];
+        foreach ($infoPais["languages"] as $lenguaje){
+            $idioma = new Idioma($lenguaje["nativeName"], $lenguaje["iso369_1"]);
+            $this->idiomas->add($idioma);
+        }
+        $this->horarios = $infoPais["Timezones"];
+        $this->ubicacion = new Ubicacion($infoPais["latlng"][0], $infoPais["latlng"][1]);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNombreEsnEspaniol(): ?string
+    public function getNombreEnEspaniol(): ?string
     {
-        return $this->nombreEsnEspaniol;
+        return $this->nombreEnEspaniol;
     }
 
-    public function setNombreEsnEspaniol(string $nombreEsnEspaniol): self
+    public function setNombreEnEspaniol(string $nombreEnEspaniol): self
     {
-        $this->nombreEsnEspaniol = $nombreEsnEspaniol;
+        $this->nombreEnEspaniol = $nombreEnEspaniol;
 
         return $this;
     }
@@ -103,14 +114,29 @@ class Pais
         return $this;
     }
 
-    public function getMoneda(): ?Moneda
+
+    /**
+     * @return Collection|Moneda[]
+     */
+    public function getMonedas(): Collection
     {
-        return $this->moneda;
+        return $this->monedas;
     }
 
-    public function setMoneda(?Moneda $moneda): self
+    public function addMoneda(Moneda $moneda): self
     {
-        $this->moneda = $moneda;
+        if (!$this->monedas->contains($moneda)) {
+            $this->monedas[] = $moneda;
+        }
+
+        return $this;
+    }
+
+    public function removeMoneda(Moneda $moneda): self
+    {
+        if ($this->monedas->contains($moneda)) {
+            $this->monedas->removeElement($moneda);
+        }
 
         return $this;
     }
@@ -141,28 +167,14 @@ class Pais
         return $this;
     }
 
-    /**
-     * @return Collection|Horario[]
-     */
-    public function getHorarios(): Collection
+    public function getZonasHorarias(): ?array
     {
-        return $this->horarios;
+        return $this->zonasHorarias;
     }
 
-    public function addHorario(Horario $horario): self
+    public function setZonasHorarias(array $zonasHorarias): self
     {
-        if (!$this->horarios->contains($horario)) {
-            $this->horarios[] = $horario;
-        }
-
-        return $this;
-    }
-
-    public function removeHorario(Horario $horario): self
-    {
-        if ($this->horarios->contains($horario)) {
-            $this->horarios->removeElement($horario);
-        }
+        $this->zonasHorarias = $zonasHorarias;
 
         return $this;
     }

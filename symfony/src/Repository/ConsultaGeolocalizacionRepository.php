@@ -36,15 +36,14 @@ class ConsultaGeolocalizacionRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?ConsultaGeolocalizacion
+
+    public function findOneByCodigoIsoPais($codigoIsoPais): ?ConsultaGeolocalizacion
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('c.codigoISOPais = :val')
+            ->setParameter('val', $codigoIsoPais)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
+
 }

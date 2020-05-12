@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\ConsultaGeolocalizacion;
 use App\Form\ConsultaGeolocalizacionType;
+use App\Service\Geolocalizador;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,15 +22,17 @@ class GeolocalizacionController extends AbstractController
     /**
      * @Route("/")
      */
-    public function index(Request $request){
+    public function index(Geolocalizador $geolocalizador, Request $request){
         $consultaGeolocalizacion = new ConsultaGeolocalizacion();
         $form = $this->createForm(ConsultaGeolocalizacionType::class, $consultaGeolocalizacion);
-        $consultaGeolocalizacion = null;
+        $geolocalizacion = null;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
-            $task = $form->getData();
+            $ip = $form->getData()->getUltimaIpConsultada();
+
+            $geolocalizacion = $geolocalizador->getGeolocalizacion($ip);
 
             // ... perform some action, such as saving the task to the database
             // for example, if Task is a Doctrine entity, save it!
@@ -37,12 +40,12 @@ class GeolocalizacionController extends AbstractController
             // $entityManager->persist($task);
             // $entityManager->flush();
 
-            $consultaGeolocalizacion = new ConsultaGeolocalizacion();
+            //$geolocalizacion = new ConsultaGeolocalizacion();
         }
 
         return $this->render('geolocalizacion/index.html.twig', [
             'form' => $form->createView(),
-            'resultados' => $consultaGeolocalizacion
+            'geolocalizacion' => $geolocalizacion
         ]);
     }
 

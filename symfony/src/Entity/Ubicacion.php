@@ -27,6 +27,12 @@ class Ubicacion
      */
     private $longitud;
 
+    public function __construct($latitud, $longitud)
+    {
+        $this->latitud = $latitud;
+        $this->longitud = $longitud;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
