@@ -32,12 +32,22 @@ class GeolocalizacionController extends AbstractController
             $ip = $form->getData()->getUltimaIpConsultada();
             $geolocalizacion = $geolocalizador->getGeolocalizacion($ip);
         }
-        $fechaActual = new DateTime();
+
+        $fechaActualArgentina = new Datetime();
+        $fechaActualUTC0 = DateTime::createFromFormat(
+            'Y-m-d H:i:s',
+            $fechaActualArgentina->format('Y-m-d H:i:s'),
+            new \DateTimeZone('Etc/GMT')
+        );
+
+        $fechaActualArgentina = DateTime::createFromFormat('Y-m-d H:i:s T', date('Y-m-d H:i:s T', time()));
+
+
 
         return $this->render('geolocalizacion/index.html.twig', [
             'form' => $form->createView(),
             'geolocalizacion' => $geolocalizacion,
-            'fechaActual' => $fechaActual,
+            'fechaActual' => $fechaActualArgentina,
             'ubicacionBuenosAires' => new Ubicacion($this->getParameter('latitud_buenos_aires'), $this->getParameter('longitud_buenos_aires'))
         ]);
     }

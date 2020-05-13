@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PaisRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -196,7 +197,25 @@ class Pais
         return $this->nombreEnEspaniol . ' (' . $this->nombreEnIngles . ') ';
     }
 
-    public function getHoras($fechaActualBuenosAires){
-
+    public function mostrarHorasSegunFechaActualUTC0($fechaActualArgentina){
+        date_default_timezone_set('UTC');
+        $fechaActualUTC0 = DateTime::createFromFormat('Y-m-d H:i:s T', date('Y-m-d H:i:s T', time()));
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        $zonasHorariasConFecha = array();
+        foreach ($this->zonasHorarias as $zonaHoraria){
+            $horasYMinutosUTC = str_replace('UTC', '', $zonaHoraria);
+            if ($horasYMinutosUTC == ""){
+                $zonaHorariaConFecha = $fechaActualUTC0->format('H:i:s') . ' (' . $zonaHoraria .  ')';
+            }
+            else{
+                $signoCuenta = $horasYMinutosUTC[0];
+                $horasASumarORestar = explode(':', $horasYMinutosUTC)[0] . 'hours';
+                $minutosASumarORestar = $signoCuenta . explode(':', $horasYMinutosUTC)[1] . 'minutes';
+                $fechaSegunZonaHoraria = $fechaActualUTC0->modify($horasASumarORestar)->modify($minutosASumarORestar);
+                $zonaHorariaConFecha = $fechaSegunZonaHoraria->format('H:i:s') . ' (' . $zonaHoraria .  ')';
+            }
+            array_push($zonasHorariasConFecha, $zonaHorariaConFecha);
+        }
+        return join(' o ', $zonasHorariasConFecha);
     }
 }
