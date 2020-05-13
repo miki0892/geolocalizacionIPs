@@ -28,7 +28,7 @@
                         {{ geolocalizacionMinimaDistancia.pais.nombreEnEspaniol }}
                     </td>
                     <td>
-                        {{ geolocalizacionMinimaDistancia.distanciaDesdeBsAs|number_format(0,',','.') }}
+                        {{ geolocalizacionMinimaDistancia.distanciaDesdeBsAs|number_format(0,',','.') }} kms
                     </td>
                     <td>
                         {{ geolocalizacionMinimaDistancia.cantidadInvocaciones }}
@@ -39,7 +39,7 @@
                         {{ geolocalizacionMaximaDistancia.pais.nombreEnEspaniol }}
                     </td>
                     <td>
-                        {{ geolocalizacionMaximaDistancia.distanciaDesdeBsAs|number_format(0,',','.') }}
+                        {{ geolocalizacionMaximaDistancia.distanciaDesdeBsAs|number_format(0,',','.') }} kms
                     </td>
                     <td>
                         {{ geolocalizacionMaximaDistancia.cantidadInvocaciones }}
@@ -48,7 +48,7 @@
             </tbody>
         </table>
         <br>
-        <label style="font-weight: bold">Promedio: </label>{{ promedioDistancia|number_format(0,',','.') }}
+        <label style="font-weight: bold">Promedio: </label>{{ promedioDistancia|number_format(0,',','.')  }} kms
     {% endif %}
 </body>
 </html>

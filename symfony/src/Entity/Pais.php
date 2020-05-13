@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\PaisRepository;
+use Cassandra\Date;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Intl\Timezones;
 
 /**
  * @ORM\Entity(repositoryClass=PaisRepository::class)
@@ -198,22 +200,25 @@ class Pais
     }
 
     public function mostrarHorasSegunFechaActualUTC0($fechaActualArgentina){
-        date_default_timezone_set('UTC');
-        $fechaActualUTC0 = DateTime::createFromFormat('Y-m-d H:i:s T', date('Y-m-d H:i:s T', time()));
-        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        $timeStampActualArgentina = $fechaActualArgentina->getTimestamp();
         $zonasHorariasConFecha = array();
         foreach ($this->zonasHorarias as $zonaHoraria){
-            $horasYMinutosUTC = str_replace('UTC', '', $zonaHoraria);
-            if ($horasYMinutosUTC == ""){
-                $zonaHorariaConFecha = $fechaActualUTC0->format('H:i:s') . ' (' . $zonaHoraria .  ')';
+            $offset = str_replace('UTC', '', $zonaHoraria);
+            if ($offset == "") $offset = "0:0";
+            if (substr($offset,0,3) == "-12") $offset = str_replace("-","+",$offset);
+            // Calcular segundos desde el offset
+            list($horas, $minutos) = explode(':', $offset);
+            $segundosOffset = $horas * 60 * 60 + $minutos * 60;
+            // Obtengo nombre del timezone a traves de los segundos calculados del offset
+            $timeZoneConvertido = timezone_name_from_abbr('', $segundosOffset, true); //true para horario de verano
+            // si el timezone es falso entonces se debe buscar por el horario de invierno
+            if ($timeZoneConvertido == "" || $timeZoneConvertido == false){
+                $timeZoneConvertido = timezone_name_from_abbr('', $segundosOffset, false);
             }
-            else{
-                $signoCuenta = $horasYMinutosUTC[0];
-                $horasASumarORestar = explode(':', $horasYMinutosUTC)[0] . 'hours';
-                $minutosASumarORestar = $signoCuenta . explode(':', $horasYMinutosUTC)[1] . 'minutes';
-                $fechaSegunZonaHoraria = $fechaActualUTC0->modify($horasASumarORestar)->modify($minutosASumarORestar);
-                $zonaHorariaConFecha = $fechaSegunZonaHoraria->format('H:i:s') . ' (' . $zonaHoraria .  ')';
-            }
+            date_default_timezone_set($timeZoneConvertido);
+
+            $horaSegunZonaHoraria = date('H:i:s', $timeStampActualArgentina);
+            $zonaHorariaConFecha = $horaSegunZonaHoraria . ' (' . $zonaHoraria .  ')';
             array_push($zonasHorariasConFecha, $zonaHorariaConFecha);
         }
         return join(' o ', $zonasHorariasConFecha);

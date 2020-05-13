@@ -21,7 +21,7 @@ class Geolocalizacion
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
-     * @Assert\Ip(message = "La dirección IP ingresada no es válida", version="all")
+     * @Assert\Ip(message = "La dirección IP ingresada no es válida.", version="all")
      */
     private $ultimaIpConsultada;
 

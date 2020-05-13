@@ -35,6 +35,9 @@ class Geolocalizador
             return $geolocalizacion;
         }
         $codigoIsoPais = $response->toArray()['countryCode'];
+        if ($codigoIsoPais == null || $codigoIsoPais == ""){
+            return $geolocalizacion;
+        }
 
         $geolocalizacionRepository = $this->entityManager->getRepository(Geolocalizacion::class);
         $geolocalizacion = $geolocalizacionRepository->findOneByCodigoIsoPais($codigoIsoPais);
