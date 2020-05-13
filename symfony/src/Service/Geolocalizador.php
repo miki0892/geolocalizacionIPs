@@ -2,8 +2,11 @@
 
 
 namespace App\Service;
-use App\Entity\ConsultaGeolocalizacion;
+use App\Entity\Geolocalizacion;
+use App\Entity\Moneda;
+use App\Entity\Ubicacion;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpClient\HttpClient;
 
@@ -13,12 +16,14 @@ class Geolocalizador
     private $client;
     private $params;
     private $entityManager;
+    private $cotizador;
 
-    public function __construct(ParameterBagInterface $params, EntityManager $entityManager)
+    public function __construct(ParameterBagInterface $params, EntityManagerInterface $entityManager, Cotizador $cotizador)
     {
         $this->params = $params;
         $this->entityManager = $entityManager;
         $this->client = HttpClient::create();
+        $this->cotizador = $cotizador;
     }
 
     public function getGeolocalizacion($ip)
@@ -31,41 +36,51 @@ class Geolocalizador
         }
         $codigoIsoPais = $response->toArray()['countryCode'];
 
-        $geolocalizacionRepository = $this->entityManager->getRepository(ConsultaGeolocalizacion::class);
+        $geolocalizacionRepository = $this->entityManager->getRepository(Geolocalizacion::class);
         $geolocalizacion = $geolocalizacionRepository->findOneByCodigoIsoPais($codigoIsoPais);
 
-        if ($geolocalizacion == null){
+        if ($geolocalizacion == null) {
             $geolocalizacion = $this->buscarInformacionPais($codigoIsoPais);
         }
-        // actualizar ip y cantidad invocaciones
-
+        $geolocalizacion->agregarIp($ip);
+        $geolocalizacion->aumentarCantidadInvocaciones();
+        $this->entityManager->persist($geolocalizacion);
+        $this->entityManager->flush();
         return $geolocalizacion;
     }
 
-    public function calcularDistanciaEntreCoordenadas($ubicacionOrigen, $ubicacionDestino){
+    public function calcularDistanciaEntreCoordenadas(Ubicacion $ubicacionOrigen, Ubicacion $ubicacionDestino){
+        $radioPlanetaTierra = 6371; //radio tierra en kilometros
 
+        $latitudOrigen = deg2rad($ubicacionOrigen->getLatitud());
+        $longitudOrigen = deg2rad($ubicacionOrigen->getLongitud());
+        $latitudDestino = deg2rad($ubicacionDestino->getLatitud());
+        $longitudDestino = deg2rad($ubicacionDestino->getLongitud());
+
+        $deltaLatitud = $latitudDestino - $latitudOrigen;
+        $deltaLongitud = $longitudDestino - $longitudOrigen;
+
+        $angulo = 2 * asin(sqrt(pow(sin($deltaLatitud / 2), 2) +
+                cos($latitudOrigen) * cos($latitudDestino) * pow(sin($deltaLongitud / 2), 2)));
+        return $angulo * $radioPlanetaTierra;
     }
 
     private function buscarInformacionPais($codigoIsoPais){
         $response = $this->client->request("GET", $this->params->get("endpoint_info_pais_por_codigo_iso") . $codigoIsoPais);
         $statusCode = $response->getStatusCode();
         $geolocalizacion = null;
-        if ($statusCode != 200){
-            return $geolocalizacion;
-        }
+        if ($statusCode != 200) return $geolocalizacion;
         $infoPais = $response->toArray();
-        $geolocalizacion = new ConsultaGeolocalizacion();
+        $geolocalizacion = new Geolocalizacion();
         $geolocalizacion->cargarInformacionPais($infoPais);
-        obtenerCotizacion();
-
-        //Cargar moneda
-        //Calcular distancia (servicio)
-        // Llamar servicio pais y guardar todo en base
+        foreach ($infoPais['currencies'] as $moneda){
+            $codigoMoneda = $moneda['code'];
+            $cotizacionEnUSD = $this->cotizador->obtenerCotizacion($codigoMoneda, 'USD');
+            $geolocalizacion->getPais()->addMoneda(new Moneda($codigoMoneda, $cotizacionEnUSD));
+        }
+        $ubicacionBsAs = new Ubicacion($this->params->get('latitud_buenos_aires'), $this->params->get('longitud_buenos_aires'));
+        $distanciaDesdeBsAs = $this->calcularDistanciaEntreCoordenadas($ubicacionBsAs, $geolocalizacion->getPais()->getUbicacion());
+        $geolocalizacion->setDistanciaDesdeBsAs($distanciaDesdeBsAs);
+        return $geolocalizacion;
     }
-
-    private function obtenerCotizacion(){
-
-    }
-
-
 }

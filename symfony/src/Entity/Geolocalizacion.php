@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\ConsultaGeolocalizacionRepository;
+use App\Repository\GeolocalizacionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=ConsultaGeolocalizacionRepository::class)
+ * @ORM\Entity(repositoryClass=GeolocalizacionRepository::class)
  */
-class ConsultaGeolocalizacion
+class Geolocalizacion
 {
     /**
      * @ORM\Id()
@@ -133,5 +133,16 @@ class ConsultaGeolocalizacion
         $this->cantidadInvocaciones = $cantidadInvocaciones;
 
         return $this;
+    }
+
+    public function agregarIp($ip){
+        $this->setUltimaIpConsultada($ip);
+        if (!in_array($ip, $this->getIpsConsultadasPorPais())){
+            $this->getIpsConsultadasPorPais()[] = $ip;
+        }
+    }
+
+    public function aumentarCantidadInvocaciones(){
+        $this->cantidadInvocaciones = $this->cantidadInvocaciones + 1;
     }
 }

@@ -19,14 +19,14 @@
     </div>
     {% if geolocalizacion is not null %}
         <div class="example-wrapper">
-            <label for="fip">IP:</label>{{ geolocalizacion.codigoISOPais }}<br>
-            <label for="fip">Fecha actual:</label><br>
-            <label for="fip">Pa&iacute;s:</label><br>
-            <label for="fip">ISO Code:</label><br>
-            <label for="fip">Idiomas:</label><br>
-            <label for="fip">Moneda:</label><br>
-            <label for="fip">Hora:</label><br>
-            <label for="fip">Direcci&oacute;n estimada:</label>
+            <label for="fip" style="font-weight: bold">IP: </label>{{ geolocalizacion.ultimaIpConsultada }}<br>
+            <label for="fip" style="font-weight: bold">Fecha actual: </label>{{ fechaActual|date("d/m/Y H:i:s")  }}<br>
+            <label for="fip" style="font-weight: bold">Pa&iacute;s: </label>{{ geolocalizacion.pais }}<br>
+            <label for="fip" style="font-weight: bold">ISO Code:  </label>{{ geolocalizacion.pais.codigoISO }}<br>
+            <label for="fip" style="font-weight: bold">Idiomas: </label>{{ geolocalizacion.pais.idiomas|join(' - ') }}<br>
+            <label for="fip" style="font-weight: bold">Monedas: </label>{{ geolocalizacion.pais.monedas|join(' - ') }}<br>
+            <label for="fip" style="font-weight: bold">Horas: </label>{{ geolocalizacion.pais.zonasHorarias|join(' o ') }}<br>
+            <label for="fip" style="font-weight: bold">Distancia estimada: </label>{{ geolocalizacion.distanciaDesdeBsAs|number_format(0, ',', '.') }} kms   {{ ubicacionBuenosAires }} a {{ geolocalizacion.pais.ubicacion }}
         </div>
     {% endif %}
 {% endblock %}

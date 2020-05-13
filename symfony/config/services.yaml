@@ -6,7 +6,9 @@
 parameters:
     endpoint_geolocalizacion_ips: 'https://api.ip2country.info/ip?'
     endpoint_info_pais_por_codigo_iso: 'https://restcountries.eu/rest/v2/alpha/'
-    url_monedas: 'http://fixer.io/'
+    endpoint_ultima_cotizacion: 'http://data.fixer.io/api/latest?access_key=07b9faf712647cf0c84f97724e2c1d6e'
+    latitud_buenos_aires: -34
+    longitud_buenos_aires: -64
 
 services:
     # default configuration for services in *this* file
@@ -30,3 +32,7 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    app.geolocalizador:
+        class: AppBundle\Services\Geolocalizador
+        arguments: ['@doctrine.orm.entity_manager']

@@ -61,4 +61,9 @@ class Ubicacion
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return '(' . number_format($this->latitud, 0) . ', ' . number_format($this->longitud, 0)  . ')';
+    }
 }

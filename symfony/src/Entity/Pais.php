@@ -35,12 +35,12 @@ class Pais
     private $codigoISO;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Moneda::class)
+     * @ORM\ManyToMany(targetEntity=Moneda::class, cascade={"persist"})
      */
     private $monedas;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Idioma::class)
+     * @ORM\ManyToMany(targetEntity=Idioma::class, cascade={"persist"})
      */
     private $idiomas;
 
@@ -58,7 +58,7 @@ class Pais
     public function __construct()
     {
         $this->idiomas = new ArrayCollection();
-        $this->horarios = new ArrayCollection();
+        $this->monedas = new ArrayCollection();
     }
 
     public function cargarInformacionPais($infoPais){
@@ -66,10 +66,10 @@ class Pais
         $this->nombreEnIngles = $infoPais["name"];
         $this->codigoISO = $infoPais["alpha2Code"];
         foreach ($infoPais["languages"] as $lenguaje){
-            $idioma = new Idioma($lenguaje["nativeName"], $lenguaje["iso369_1"]);
+            $idioma = new Idioma($lenguaje["nativeName"], $lenguaje["iso639_1"]);
             $this->idiomas->add($idioma);
         }
-        $this->horarios = $infoPais["Timezones"];
+        $this->zonasHorarias = $infoPais["timezones"];
         $this->ubicacion = new Ubicacion($infoPais["latlng"][0], $infoPais["latlng"][1]);
     }
 
@@ -189,5 +189,14 @@ class Pais
         $this->ubicacion = $ubicacion;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->nombreEnEspaniol . ' (' . $this->nombreEnIngles . ') ';
+    }
+
+    public function getHoras($fechaActualBuenosAires){
+
     }
 }

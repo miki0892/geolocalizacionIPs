@@ -5,6 +5,50 @@
     <title>Estadisticas</title>
 </head>
 <body>
-
+    {% if geolocalizacionMinimaDistancia is null or geolocalizacionMaximaDistancia  is null %}
+        NO HAY NINGUNA GEOLOCALIZACI%Oacute;N CARGADA
+    {% else %}
+        <table style="table-border-color-dark: black">
+            <thead>
+                <tr>
+                    <th style="font-weight: bold">
+                        Pa&iacute;s
+                    </th>
+                    <th style="font-weight: bold">
+                        Distancia
+                    </th>
+                    <th style="font-weight: bold">
+                        Invocaciones
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {{ geolocalizacionMinimaDistancia.pais.nombreEnEspaniol }}
+                    </td>
+                    <td>
+                        {{ geolocalizacionMinimaDistancia.distanciaDesdeBsAs|number_format(0,',','.') }}
+                    </td>
+                    <td>
+                        {{ geolocalizacionMinimaDistancia.cantidadInvocaciones }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ geolocalizacionMaximaDistancia.pais.nombreEnEspaniol }}
+                    </td>
+                    <td>
+                        {{ geolocalizacionMaximaDistancia.distanciaDesdeBsAs|number_format(0,',','.') }}
+                    </td>
+                    <td>
+                        {{ geolocalizacionMaximaDistancia.cantidadInvocaciones }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <label style="font-weight: bold">Promedio: </label>{{ promedioDistancia|number_format(0,',','.') }}
+    {% endif %}
 </body>
 </html>

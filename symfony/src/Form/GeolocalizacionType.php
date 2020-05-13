@@ -2,7 +2,7 @@
 
 
 namespace App\Form;
-use App\Entity\ConsultaGeolocalizacion;
+use App\Entity\Geolocalizacion;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ConsultaGeolocalizacionType extends AbstractType
+class GeolocalizacionType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -26,7 +26,7 @@ class ConsultaGeolocalizacionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => ConsultaGeolocalizacion::class,
+            'data_class' => Geolocalizacion::class,
         ]);
     }
 }

@@ -23,9 +23,15 @@ class Moneda
     private $codigo;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=6)
+     * @ORM\Column(type="decimal", precision=10, scale=6, nullable=true)
      */
     private $cotizacionEnUSD;
+
+    public function __construct($codigo, $cotizacionEnUSD)
+    {
+        $this->codigo = $codigo;
+        $this->cotizacionEnUSD = $cotizacionEnUSD;
+    }
 
     public function getId(): ?int
     {
@@ -54,5 +60,14 @@ class Moneda
         $this->cotizacionEnUSD = $cotizacionEnUSD;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        $cadena = $this->codigo;
+        if ($this->cotizacionEnUSD != null){
+            $cadena .= ' (1 ' . $this->codigo . ' = ' . $this->cotizacionEnUSD . ' U$S) ';
+        }
+        return $cadena;
     }
 }

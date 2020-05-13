@@ -46,7 +46,9 @@
     <parameter key="container.dumper.inline_factories">true</parameter>
     <parameter key="endpoint_geolocalizacion_ips">https://api.ip2country.info/ip?</parameter>
     <parameter key="endpoint_info_pais_por_codigo_iso">https://restcountries.eu/rest/v2/alpha/</parameter>
-    <parameter key="url_monedas">http://fixer.io/</parameter>
+    <parameter key="endpoint_ultima_cotizacion">http://data.fixer.io/api/latest?access_key=07b9faf712647cf0c84f97724e2c1d6e</parameter>
+    <parameter key="latitud_buenos_aires">-34</parameter>
+    <parameter key="longitud_buenos_aires">-64</parameter>
     <parameter key="fragment.renderer.hinclude.global_template"></parameter>
     <parameter key="fragment.path">/_fragment</parameter>
     <parameter key="kernel.secret">%env(APP_SECRET)%</parameter>
@@ -173,10 +175,10 @@
         <argument type="service" id=".service_locator.Itk2j2N.App\Controller\GeolocalizacionController"/>
       </call>
     </service>
-    <service id="App\Form\ConsultaGeolocalizacionType" class="App\Form\ConsultaGeolocalizacionType" autowire="true" autoconfigure="true">
+    <service id="App\Form\GeolocalizacionType" class="App\Form\GeolocalizacionType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
     </service>
-    <service id="App\Repository\ConsultaGeolocalizacionRepository" class="App\Repository\ConsultaGeolocalizacionRepository" autowire="true" autoconfigure="true">
+    <service id="App\Repository\GeolocalizacionRepository" class="App\Repository\GeolocalizacionRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -196,7 +198,17 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
-    <service id="App\Service\Geolocalizador" class="App\Service\Geolocalizador" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\Cotizador" class="App\Service\Cotizador" autowire="true" autoconfigure="true">
+      <argument type="service" id="parameter_bag"/>
+    </service>
+    <service id="App\Service\Geolocalizador" class="App\Service\Geolocalizador" autowire="true" autoconfigure="true">
+      <argument type="service" id="parameter_bag"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Cotizador"/>
+    </service>
+    <service id="app.geolocalizador" class="AppBundle\Services\Geolocalizador" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory" public="false"/>
     <service id="response_listener" class="Symfony\Component\HttpKernel\EventListener\ResponseListener" public="false">
       <tag name="kernel.event_subscriber"/>
@@ -511,7 +523,7 @@
         <argument>Symfony\Bridge\Doctrine\Form\Type</argument>
       </argument>
       <argument type="collection">
-        <argument>App\Form\ConsultaGeolocalizacionType</argument>
+        <argument>App\Form\GeolocalizacionType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\ChoiceType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FileType</argument>
@@ -842,7 +854,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension" public="false">
-      <argument type="service" id=".service_locator.gT3NxOZ"/>
+      <argument type="service" id=".service_locator.hlclKkh"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -1515,7 +1527,7 @@
       <factory class="Doctrine\ORM\EntityManager" method="create"/>
     </service>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory" public="false">
-      <argument type="service" id=".service_locator.XAR.AUc"/>
+      <argument type="service" id=".service_locator.wVwBO4M"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -2150,10 +2162,10 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\GeolocalizacionController" class="App\Controller\GeolocalizacionController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\GeolocalizacionController" class="App\Controller\GeolocalizacionController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\GeolocalizacionController" class="App\Controller\GeolocalizacionController" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ConsultaGeolocalizacionType" class="App\Form\ConsultaGeolocalizacionType" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Form\ConsultaGeolocalizacionType" class="App\Form\ConsultaGeolocalizacionType" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ConsultaGeolocalizacionRepository" class="App\Repository\ConsultaGeolocalizacionRepository" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Repository\ConsultaGeolocalizacionRepository" class="App\Repository\ConsultaGeolocalizacionRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\GeolocalizacionType" class="App\Form\GeolocalizacionType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\GeolocalizacionType" class="App\Form\GeolocalizacionType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\GeolocalizacionRepository" class="App\Repository\GeolocalizacionRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\GeolocalizacionRepository" class="App\Repository\GeolocalizacionRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\IdiomaRepository" class="App\Repository\IdiomaRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\IdiomaRepository" class="App\Repository\IdiomaRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\MonedaRepository" class="App\Repository\MonedaRepository" autowire="true" abstract="true"/>
@@ -2437,10 +2449,10 @@
       <argument type="service" id="debug.argument_resolver.not_tagged_controller.inner"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.gT3NxOZ" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.hlclKkh" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="App\Form\ConsultaGeolocalizacionType" type="service" id="App\Form\ConsultaGeolocalizacionType"/>
+        <argument key="App\Form\GeolocalizacionType" type="service" id="App\Form\GeolocalizacionType"/>
         <argument key="Symfony\Bridge\Doctrine\Form\Type\EntityType" type="service" id="form.type.entity"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\ChoiceType" type="service" id="form.type.choice"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FileType" type="service" id="form.type.file"/>
@@ -2453,10 +2465,10 @@
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
       </argument>
     </service>
-    <service id=".service_locator.XAR.AUc" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.wVwBO4M" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="App\Repository\ConsultaGeolocalizacionRepository" type="service" id="App\Repository\ConsultaGeolocalizacionRepository"/>
+        <argument key="App\Repository\GeolocalizacionRepository" type="service" id="App\Repository\GeolocalizacionRepository"/>
         <argument key="App\Repository\IdiomaRepository" type="service" id="App\Repository\IdiomaRepository"/>
         <argument key="App\Repository\MonedaRepository" type="service" id="App\Repository\MonedaRepository"/>
         <argument key="App\Repository\PaisRepository" type="service" id="App\Repository\PaisRepository"/>

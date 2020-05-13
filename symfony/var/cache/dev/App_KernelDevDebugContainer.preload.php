@@ -6,7 +6,7 @@
 use Symfony\Component\DependencyInjection\Dumper\Preloader;
 
 require dirname(__DIR__, 3).'/vendor/autoload.php';
-require __DIR__.'/ContainerScgLxtI/App_KernelDevDebugContainer.php';
+require __DIR__.'/ContainerOAUzFAx/App_KernelDevDebugContainer.php';
 
 $classes = [];
 $classes[] = 'Symfony\Bundle\FrameworkBundle\FrameworkBundle';
@@ -17,12 +17,14 @@ $classes[] = 'Symfony\Bundle\TwigBundle\TwigBundle';
 $classes[] = 'Twig\Extra\TwigExtraBundle\TwigExtraBundle';
 $classes[] = 'Symfony\Component\DependencyInjection\ServiceLocator';
 $classes[] = 'App\Controller\GeolocalizacionController';
-$classes[] = 'App\Form\ConsultaGeolocalizacionType';
-$classes[] = 'App\Repository\ConsultaGeolocalizacionRepository';
+$classes[] = 'App\Form\GeolocalizacionType';
+$classes[] = 'App\Repository\GeolocalizacionRepository';
 $classes[] = 'App\Repository\IdiomaRepository';
 $classes[] = 'App\Repository\MonedaRepository';
 $classes[] = 'App\Repository\PaisRepository';
 $classes[] = 'App\Repository\UbicacionRepository';
+$classes[] = 'App\Service\Geolocalizador';
+$classes[] = 'App\Service\Cotizador';
 $classes[] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController';
 $classes[] = 'Symfony\Bundle\FrameworkBundle\Controller\TemplateController';
 $classes[] = 'Symfony\Component\Cache\DoctrineProvider';
