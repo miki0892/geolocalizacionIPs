@@ -23,7 +23,7 @@ class Idioma
     private $nombre;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $abreviacion;
 
@@ -64,6 +64,8 @@ class Idioma
 
     public function __toString()
     {
-        return $this->nombre . ' (' . $this->abreviacion . ') ';
+        $cadena = $this->nombre . ' ';
+        if ($this->abreviacion) $cadena .= $cadena . '(' . $this->abreviacion . ') ';
+        return $cadena;
     }
 }

@@ -69,7 +69,7 @@ class Pais
         $this->nombreEnIngles = $infoPais["name"];
         $this->codigoISO = $infoPais["alpha2Code"];
         foreach ($infoPais["languages"] as $lenguaje){
-            $idioma = new Idioma($lenguaje["nativeName"], $lenguaje["iso639_1"]);
+            $idioma = new Idioma($lenguaje["name"], $lenguaje["iso639_1"]);
             $this->idiomas->add($idioma);
         }
         $this->zonasHorarias = $infoPais["timezones"];
@@ -199,25 +199,23 @@ class Pais
         return $this->nombreEnEspaniol . ' (' . $this->nombreEnIngles . ') ';
     }
 
-    public function mostrarHorasSegunFechaActualUTC0($fechaActualArgentina){
+    public function mostrarHorasSegunFechaActual($fechaActualArgentina){
         $timeStampActualArgentina = $fechaActualArgentina->getTimestamp();
+        //Seteo fecha en timezone UTC 0 para sumarle o restarle las horas segun cada zonaHoraria del pais
+        date_default_timezone_set('UTC');
+        $fechaActualUTC0 = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', $timeStampActualArgentina));
         $zonasHorariasConFecha = array();
+        //Por cada zona horaria calculo la fecha en base al offset (horas y minutos) y a la fecha en UTC
         foreach ($this->zonasHorarias as $zonaHoraria){
+            $fechaZonaHoraria = clone $fechaActualUTC0;
+            $horaSegunZonaHoraria = $fechaZonaHoraria->format("H:i:s");
             $offset = str_replace('UTC', '', $zonaHoraria);
-            if ($offset == "") $offset = "0:0";
-            if (substr($offset,0,3) == "-12") $offset = str_replace("-","+",$offset);
-            // Calcular segundos desde el offset
-            list($horas, $minutos) = explode(':', $offset);
-            $segundosOffset = $horas * 60 * 60 + $minutos * 60;
-            // Obtengo nombre del timezone a traves de los segundos calculados del offset
-            $timeZoneConvertido = timezone_name_from_abbr('', $segundosOffset, true); //true para horario de verano
-            // si el timezone es falso entonces se debe buscar por el horario de invierno
-            if ($timeZoneConvertido == "" || $timeZoneConvertido == false){
-                $timeZoneConvertido = timezone_name_from_abbr('', $segundosOffset, false);
+            if ($offset != "") {
+                $signo = $offset[0];
+                $horas = explode(":",$offset)[0] . "hours";
+                $minutos = $signo . explode(":",$offset)[1] . "minutes";
+                $horaSegunZonaHoraria = $fechaZonaHoraria->modify($horas)->modify($minutos)->format("H:i:s");
             }
-            date_default_timezone_set($timeZoneConvertido);
-
-            $horaSegunZonaHoraria = date('H:i:s', $timeStampActualArgentina);
             $zonaHorariaConFecha = $horaSegunZonaHoraria . ' (' . $zonaHoraria .  ')';
             array_push($zonasHorariasConFecha, $zonaHorariaConFecha);
         }

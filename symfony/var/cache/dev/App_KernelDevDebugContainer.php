@@ -16,6 +16,6 @@ if (!\class_exists(App_KernelDevDebugContainer::class, false)) {
 
 return new \ContainerOAUzFAx\App_KernelDevDebugContainer([
     'container.build_hash' => 'OAUzFAx',
-    'container.build_id' => '1e26a358',
-    'container.build_time' => 1589376960,
+    'container.build_id' => 'b79b4bfc',
+    'container.build_time' => 1589410499,
 ], __DIR__.\DIRECTORY_SEPARATOR.'ContainerOAUzFAx');

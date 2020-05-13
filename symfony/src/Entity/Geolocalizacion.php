@@ -26,11 +26,6 @@ class Geolocalizacion
     private $ultimaIpConsultada;
 
     /**
-     * @ORM\Column(type="array")
-     */
-    private $ipsConsultadasPorPais = [];
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $codigoISOPais;
@@ -70,19 +65,6 @@ class Geolocalizacion
     public function setUltimaIpConsultada(string $ip): self
     {
         $this->ultimaIpConsultada = $ip;
-
-        return $this;
-    }
-
-
-    public function getIpsConsultadasPorPais(): ?array
-    {
-        return $this->ipsConsultadasPorPais;
-    }
-
-    public function setIpsConsultadasPorPais(array $ips): self
-    {
-        $this->ipsConsultadasPorPais = $ips;
 
         return $this;
     }
@@ -135,12 +117,6 @@ class Geolocalizacion
         return $this;
     }
 
-    public function agregarIp($ip){
-        $this->setUltimaIpConsultada($ip);
-        if (!in_array($ip, $this->getIpsConsultadasPorPais())){
-            $this->getIpsConsultadasPorPais()[] = $ip;
-        }
-    }
 
     public function aumentarCantidadInvocaciones(){
         $this->cantidadInvocaciones = $this->cantidadInvocaciones + 1;

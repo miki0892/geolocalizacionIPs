@@ -45,7 +45,7 @@ class Geolocalizador
         if ($geolocalizacion == null) {
             $geolocalizacion = $this->buscarInformacionPais($codigoIsoPais);
         }
-        $geolocalizacion->agregarIp($ip);
+        $geolocalizacion->setUltimaIpConsultada($ip);
         $geolocalizacion->aumentarCantidadInvocaciones();
         $this->entityManager->persist($geolocalizacion);
         $this->entityManager->flush();
