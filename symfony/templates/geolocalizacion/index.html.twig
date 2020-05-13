@@ -11,7 +11,9 @@
     <div class="example-wrapper">
         <h3>Geolocalizaci&oacute;n IPs</h3>
         {% if ipNoEncontrada == true %}
-            No pudo encontrarse la geolocalizaci&oacute;n de la IP consultada.
+            <ul>
+                <li>No pudo encontrarse la geolocalizaci&oacute;n de la IP consultada.</li>
+            </ul>
         {% endif %}
         {{ form_start(form) }}
             {{ form_errors(form.ultimaIpConsultada) }}<br>
